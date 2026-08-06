@@ -11,7 +11,7 @@ There is no per-device forwarding. The tray opens one reverse tunnel
 that exposes your **local adb server socket** on the server:
 
 ```
-ssh -R 5037:localhost:5037 myserver
+ssh -R 5037:127.0.0.1:5037 myserver
 ```
 
 `adb` on the server then talks to your local adb server, so `adb devices`,

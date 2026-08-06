@@ -27,7 +27,9 @@ tunnel=web|myserver|L|3000, 5173|on
 ```
 
 Fields: name, ssh-config host alias, `L` or `R`, ports, `on`/`off`.
-A bare port `3000` expands to `3000:localhost:3000`. Anything containing
+A bare port `3000` expands to `3000:127.0.0.1:3000` — explicitly IPv4,
+because Windows resolves `localhost` to `::1` and IPv4-only targets
+(adb, many dev servers) then fail inside the tunnel. Anything containing
 `:` is passed to ssh unchanged, so `8080:10.0.0.5:80` or
 `0.0.0.0:3000:localhost:3000` work as usual.
 
