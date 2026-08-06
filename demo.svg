@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 400" font-family="Consolas, 'Cascadia Mono', Menlo, monospace">
+  <style>
+    .s1 { animation: w1 12s linear infinite; }
+    .s2 { animation: w2 12s linear infinite; }
+    .s3 { animation: w3 12s linear infinite; }
+    .s4 { animation: w4 12s linear infinite; }
+    @keyframes w1 { 0%{opacity:0} 2%{opacity:1} 24%{opacity:1} 28%{opacity:0} 100%{opacity:0} }
+    @keyframes w2 { 0%,26%{opacity:0} 30%{opacity:1} 49%{opacity:1} 53%,100%{opacity:0} }
+    @keyframes w3 { 0%,51%{opacity:0} 55%{opacity:1} 68%{opacity:1} 72%,100%{opacity:0} }
+    @keyframes w4 { 0%,70%{opacity:0} 74%{opacity:1} 97%{opacity:1} 100%{opacity:0} }
+    .dim { fill:#8a8a8a } .txt { fill:#d4d4d4 } .acc { fill:#7986cb } .ok { fill:#81c784 }
+  </style>
+
+  <!-- window chrome -->
+  <rect x="10" y="10" width="780" height="380" rx="10" fill="#1e1e1e" stroke="#3c3c3c"/>
+  <path d="M10 48 h780 v-28 a10 10 0 0 0 -10 -10 h-760 a10 10 0 0 0 -10 10 z" fill="#2d2d2d"/>
+  <circle cx="34" cy="29" r="6" fill="#ff5f57"/><circle cx="56" cy="29" r="6" fill="#febc2e"/><circle cx="78" cy="29" r="6" fill="#28c840"/>
+  <text x="400" y="34" text-anchor="middle" font-size="14" class="dim">tether</text>
+
+  <!-- step 1: screenshot -->
+  <g class="s1" opacity="0">
+    <text x="60" y="95" font-size="15" class="acc">step 1</text>
+    <text x="60" y="128" font-size="22" class="txt">Win+Shift+S  (screenshot as usual)</text>
+    <rect x="240" y="180" width="320" height="150" fill="none" stroke="#7986cb" stroke-width="2" stroke-dasharray="8 6"/>
+    <text x="400" y="262" text-anchor="middle" font-size="15" class="dim">image copied to the clipboard</text>
+  </g>
+
+  <!-- step 2: toast asks -->
+  <g class="s2" opacity="0">
+    <text x="60" y="95" font-size="15" class="acc">step 2</text>
+    <text x="60" y="128" font-size="22" class="txt">click the toast (or press Ctrl+Alt+V)</text>
+    <rect x="370" y="210" width="380" height="96" rx="8" fill="#2b2b2b" stroke="#454545"/>
+    <circle cx="414" cy="258" r="18" fill="#3f51b5"/>
+    <polygon points="414,246 404,259 410,259 410,266 418,266 418,259 424,259" fill="#ffffff"/>
+    <text x="446" y="252" font-size="16" class="txt">Screenshot captured</text>
+    <text x="446" y="278" font-size="13" class="dim">Click here to send to my-server</text>
+  </g>
+
+  <!-- step 2b: sent -->
+  <g class="s3" opacity="0">
+    <text x="60" y="95" font-size="15" class="acc">step 2</text>
+    <text x="60" y="128" font-size="22" class="txt">uploaded; remote path is on the clipboard</text>
+    <rect x="330" y="210" width="420" height="96" rx="8" fill="#2b2b2b" stroke="#454545"/>
+    <circle cx="374" cy="258" r="18" fill="#388e3c"/>
+    <polygon points="366,258 372,266 384,250 380,247 372,259 369,255" fill="#ffffff"/>
+    <text x="406" y="252" font-size="16" class="ok">Sent to my-server</text>
+    <text x="406" y="278" font-size="13" class="dim">/tmp/clip-20260710-101530.png</text>
+  </g>
+
+  <!-- step 3: paste in the SSH session -->
+  <g class="s4" opacity="0">
+    <text x="60" y="95" font-size="15" class="acc">step 3</text>
+    <text x="60" y="128" font-size="22" class="txt">Ctrl+V in the SSH window</text>
+    <text x="60" y="200" font-size="14" class="dim">Claude Code (over SSH)</text>
+    <text x="60" y="240" font-size="20" class="txt">&gt; /tmp/clip-20260710-101530.png</text>
+    <text x="60" y="280" font-size="20" class="ok">[Image #1] attached</text>
+    <text x="60" y="330" font-size="14" class="dim">the path pastes as text; Claude Code reads the image from its own filesystem</text>
+  </g>
+</svg>
