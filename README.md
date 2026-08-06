@@ -1,5 +1,8 @@
 # tether
 
+[![release](https://img.shields.io/github/v/release/thxnlo/tether?color=9cc3f5&labelColor=1a1b41)](https://github.com/thxnlo/tether/releases/latest)
+[![license](https://img.shields.io/badge/license-MIT-c6e85c?labelColor=1a1b41)](LICENSE)
+
 Keep your Windows machine tethered to your SSH hosts: paste screenshots
 and files into Claude Code or Codex running over SSH, keep port forwards
 alive, share your local Android devices with the server, and receive
