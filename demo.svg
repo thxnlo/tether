@@ -8,12 +8,12 @@
     @keyframes w2 { 0%,26%{opacity:0} 30%{opacity:1} 49%{opacity:1} 53%,100%{opacity:0} }
     @keyframes w3 { 0%,51%{opacity:0} 55%{opacity:1} 68%{opacity:1} 72%,100%{opacity:0} }
     @keyframes w4 { 0%,70%{opacity:0} 74%{opacity:1} 97%{opacity:1} 100%{opacity:0} }
-    .dim { fill:#8a8a8a } .txt { fill:#d4d4d4 } .acc { fill:#7986cb } .ok { fill:#81c784 }
+    .dim { fill:#9699b9 } .txt { fill:#f2ece3 } .acc { fill:#9cc3f5 } .ok { fill:#c6e85c }
   </style>
 
   <!-- window chrome -->
-  <rect x="10" y="10" width="780" height="380" rx="10" fill="#1e1e1e" stroke="#3c3c3c"/>
-  <path d="M10 48 h780 v-28 a10 10 0 0 0 -10 -10 h-760 a10 10 0 0 0 -10 10 z" fill="#2d2d2d"/>
+  <rect x="10" y="10" width="780" height="380" rx="10" fill="#1a1b41" stroke="#3c3f6e"/>
+  <path d="M10 48 h780 v-28 a10 10 0 0 0 -10 -10 h-760 a10 10 0 0 0 -10 10 z" fill="#22234f"/>
   <circle cx="34" cy="29" r="6" fill="#ff5f57"/><circle cx="56" cy="29" r="6" fill="#febc2e"/><circle cx="78" cy="29" r="6" fill="#28c840"/>
   <text x="400" y="34" text-anchor="middle" font-size="14" class="dim">tether</text>
 
@@ -21,30 +21,45 @@
   <g class="s1" opacity="0">
     <text x="60" y="95" font-size="15" class="acc">step 1</text>
     <text x="60" y="128" font-size="22" class="txt">Win+Shift+S  (screenshot as usual)</text>
-    <rect x="240" y="180" width="320" height="150" fill="none" stroke="#7986cb" stroke-width="2" stroke-dasharray="8 6"/>
+    <rect x="240" y="180" width="320" height="150" fill="none" stroke="#9cc3f5" stroke-width="2" stroke-dasharray="8 6"/>
     <text x="400" y="262" text-anchor="middle" font-size="15" class="dim">image copied to the clipboard</text>
   </g>
 
-  <!-- step 2: toast asks -->
+  <!-- step 2: blue dot on the tray icon, click it -->
   <g class="s2" opacity="0">
     <text x="60" y="95" font-size="15" class="acc">step 2</text>
-    <text x="60" y="128" font-size="22" class="txt">click the toast (or press Ctrl+Alt+V)</text>
-    <rect x="370" y="210" width="380" height="96" rx="8" fill="#2b2b2b" stroke="#454545"/>
-    <circle cx="414" cy="258" r="18" fill="#3f51b5"/>
-    <polygon points="414,246 404,259 410,259 410,266 418,266 418,259 424,259" fill="#ffffff"/>
-    <text x="446" y="252" font-size="16" class="txt">Screenshot captured</text>
-    <text x="446" y="278" font-size="13" class="dim">Click here to send to my-server</text>
+    <text x="60" y="128" font-size="22" class="txt">the tray icon gets a blue dot — click it</text>
+    <text x="60" y="158" font-size="14" class="dim">(or press Ctrl+Alt+V)</text>
+    <!-- taskbar corner -->
+    <rect x="430" y="250" width="320" height="60" rx="8" fill="#101128" stroke="#2c2e5c"/>
+    <rect x="452" y="268" width="24" height="24" rx="5" fill="#2c2e5c"/>
+    <rect x="490" y="268" width="24" height="24" rx="5" fill="#2c2e5c"/>
+    <!-- tether icon: navy square, blue chip, arrow -->
+    <rect x="532" y="266" width="28" height="28" rx="7" fill="#0e0f2e" stroke="#3c3f6e"/>
+    <circle cx="546" cy="280" r="10" fill="#9cc3f5"/>
+    <polygon points="546,273.5 540.5,280.5 551.5,280.5" fill="#1a1b41"/>
+    <rect x="544" y="280" width="4" height="7" fill="#1a1b41"/>
+    <!-- the blue "waiting" dot -->
+    <circle cx="558" cy="292" r="6" fill="#4d9bf5" stroke="#101128" stroke-width="1.5"/>
+    <!-- cursor -->
+    <polygon points="574,300 574,322 580,317 585,327 589,325 584,315 591,314" fill="#f2ece3" stroke="#1a1b41"/>
+    <text x="590" y="238" text-anchor="middle" font-size="13" class="dim">one click sends it</text>
   </g>
 
-  <!-- step 2b: sent -->
+  <!-- step 2b: green flash = sent -->
   <g class="s3" opacity="0">
     <text x="60" y="95" font-size="15" class="acc">step 2</text>
-    <text x="60" y="128" font-size="22" class="txt">uploaded; remote path is on the clipboard</text>
-    <rect x="330" y="210" width="420" height="96" rx="8" fill="#2b2b2b" stroke="#454545"/>
-    <circle cx="374" cy="258" r="18" fill="#388e3c"/>
-    <polygon points="366,258 372,266 384,250 380,247 372,259 369,255" fill="#ffffff"/>
-    <text x="406" y="252" font-size="16" class="ok">Sent to my-server</text>
-    <text x="406" y="278" font-size="13" class="dim">/tmp/clip-20260710-101530.png</text>
+    <text x="60" y="128" font-size="22" class="txt">green flash — remote path is on the clipboard</text>
+    <rect x="430" y="250" width="320" height="60" rx="8" fill="#101128" stroke="#2c2e5c"/>
+    <rect x="452" y="268" width="24" height="24" rx="5" fill="#2c2e5c"/>
+    <rect x="490" y="268" width="24" height="24" rx="5" fill="#2c2e5c"/>
+    <rect x="532" y="266" width="28" height="28" rx="7" fill="#0e0f2e" stroke="#3c3f6e"/>
+    <circle cx="546" cy="280" r="10" fill="#9cc3f5"/>
+    <polygon points="546,273.5 540.5,280.5 551.5,280.5" fill="#1a1b41"/>
+    <rect x="544" y="280" width="4" height="7" fill="#1a1b41"/>
+    <circle cx="558" cy="292" r="6" fill="#c6e85c" stroke="#101128" stroke-width="1.5"/>
+    <text x="590" y="238" text-anchor="middle" font-size="13" class="ok">sent — safe to paste</text>
+    <text x="590" y="332" text-anchor="middle" font-size="13" class="dim">/tmp/clip-20260806-101530.png</text>
   </g>
 
   <!-- step 3: paste in the SSH session -->
@@ -52,7 +67,7 @@
     <text x="60" y="95" font-size="15" class="acc">step 3</text>
     <text x="60" y="128" font-size="22" class="txt">Ctrl+V in the SSH window</text>
     <text x="60" y="200" font-size="14" class="dim">Claude Code (over SSH)</text>
-    <text x="60" y="240" font-size="20" class="txt">&gt; /tmp/clip-20260710-101530.png</text>
+    <text x="60" y="240" font-size="20" class="txt">&gt; /tmp/clip-20260806-101530.png</text>
     <text x="60" y="280" font-size="20" class="ok">[Image #1] attached</text>
     <text x="60" y="330" font-size="14" class="dim">the path pastes as text; Claude Code reads the image from its own filesystem</text>
   </g>
