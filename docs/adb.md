@@ -63,6 +63,18 @@ phone/router, since most "random" drops are one of these:
 - turn off AP/client isolation on the router
 - keep phone and PC on the same band/subnet
 
+## If `adb devices` on the server suddenly shows nothing
+
+The usual cause: the tunnel dropped for a moment, someone (or something)
+ran `adb` on the server during the gap, and that spawned a server-local
+adb daemon which now owns port 5037. tether handles this automatically —
+the tunnel binds the remote port explicitly, treats the squatted port as
+a failed bind, runs `adb kill-server` on the host, and rebinds — but the
+loop takes up to a minute after the drop. To force it immediately, run
+`adb kill-server` on the server yourself and wait a few seconds. If the
+device list is still empty after that, check who owns the port:
+`ss -tlnp | grep 5037` (sshd = tunnel is up; adb = the daemon won again).
+
 ## Limitations
 
 - Reconnect retries the last known `ip:port` only. If the port

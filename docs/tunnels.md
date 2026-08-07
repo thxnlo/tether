@@ -57,3 +57,11 @@ show ↻ forever — check the tooltip.
 
 **Wi-Fi switch / VPN toggle.** Looks like a drop: keep-alive kills the
 process within ~45 s and the backoff loop reconnects. Nothing to do.
+
+**A reverse (`R`) tunnel shows ● but clients can't connect.** The live
+dot for reverse tunnels means the ssh process is up — it cannot see the
+remote port. If something on the server grabbed the IPv4 side of the
+port before the tunnel bound, sshd may hold only `::1` and IPv4 clients
+hit the squatter. Check `ss -tlnp | grep <port>` on the server; free
+the port and the supervisor rebinds on its next retry. (The ADB share
+handles its own port this way automatically.)
