@@ -63,17 +63,35 @@ phone/router, since most "random" drops are one of these:
 - turn off AP/client isolation on the router
 - keep phone and PC on the same band/subnet
 
-## If `adb devices` on the server suddenly shows nothing
+## If `adb devices` on the server suddenly shows nothing, or hangs
 
-The usual cause: the tunnel dropped for a moment, someone (or something)
-ran `adb` on the server during the gap, and that spawned a server-local
-adb daemon which now owns port 5037. tether handles this automatically —
-the tunnel binds the remote port explicitly, treats the squatted port as
-a failed bind, runs `adb kill-server` on the host, and rebinds — but the
-loop takes up to a minute after the drop. To force it immediately, run
-`adb kill-server` on the server yourself and wait a few seconds. If the
-device list is still empty after that, check who owns the port:
-`ss -tlnp | grep 5037` (sshd = tunnel is up; adb = the daemon won again).
+Two things can own the remote port after a drop, and tether tells them
+apart before touching anything (v3.0.4):
+
+1. **sshd itself, holding the previous tunnel's forward.** A server
+   without `ClientAliveInterval` never notices that the old client is
+   gone and keeps the port bound for hours. Every `adb` command on the
+   server then *hangs* — it dials a forward that leads nowhere — and so
+   did tether's own recovery up to v3.0.3 (`adb kill-server` on the host
+   went down the same dead forward and left a zombie per retry). Now the
+   bind-failure fix reads the listener's session scope (`ss -e`), kills
+   that stale sshd session of yours (its `cgroup.procs` is readable
+   without root; `/proc/<pid>/fd` of a privsep child is not), and rebinds
+   on the next retry — a few seconds, not hours.
+2. **A server-local adb daemon**, spawned by the first remote `adb`
+   command during the gap. Evicted with `timeout 5 adb kill-server`,
+   bounded so it can never hang the loop again.
+
+To force it by hand: `ss -tlnpe | grep 5037` on the server — `sshd` with
+a `session-N.scope` that is not your live one is the stale forward
+(`kill` its user-side pid, or `loginctl kill-session N`); `adb` is the
+daemon (`adb kill-server`). Never run `adb kill-server` *on the server*
+while the tunnel is healthy: the adb client is talking to your Windows
+adb server through it, and it is that one you would kill.
+
+Make the stale case rare by letting sshd reap dead clients (see
+[tunnels.md](tunnels.md)): `ClientAliveInterval 15`,
+`ClientAliveCountMax 3` in `sshd_config`.
 
 ## Limitations
 

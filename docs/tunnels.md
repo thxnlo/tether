@@ -38,8 +38,10 @@ because Windows resolves `localhost` to `::1` and IPv4-only targets
 **Remote (`R`) port stays "in use" after a drop.** When a reverse tunnel
 dies, the remote sshd can keep the port bound until it notices the dead
 connection, so the reconnect fails with *address already in use*. The
-supervisor just keeps retrying — the port frees once sshd's own timers
-fire. To make that fast, set on the server:
+supervisor keeps retrying — the port frees once sshd's own timers fire —
+and the ADB share goes further and kills its own stale session on the
+host (docs/adb.md). Without `ClientAlive*` on the server those timers are
+the TCP defaults, i.e. hours; set on the server:
 
 ```
 # /etc/ssh/sshd_config
