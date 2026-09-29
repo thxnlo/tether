@@ -117,8 +117,8 @@ Or let [Obtainium](https://github.com/ImranR98/Obtainium) watch
    **Pair**. The code works once, for 10 minutes.
 
 To **replace** a pairing, open a new pairing link while the phone is paired:
-run `phone-drop pair <name>` on the server, scan the QR code and open the
-link. tether asks "Replace pairing with …?" first. The paired screen has no
+use **Pair a phone…** in the tray (or run `phone-drop pair <name>` on the
+server), scan the QR code and open the link. tether asks "Replace pairing with …?" first. The paired screen has no
 field to paste a link into; to pair from a copied link instead, Unpair first
 (a pairing code already waiting on the server survives Unpair), then open
 tether, which picks the link up from the clipboard.

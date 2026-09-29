@@ -124,7 +124,7 @@ you're done — otherwise:
 
 ## From your Android phone
 
-Share a screenshot, photo, or file from any app to *tether* and its path
+Share a screenshot, photo, file or text from any app to *tether* and its path
 lands on your Windows clipboard a few seconds later — the phone's result
 says **"On &lt;PC&gt;'s clipboard"** only once a PC has actually picked it
 up.
