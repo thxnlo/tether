@@ -14,7 +14,7 @@ the path into Claude Code, Codex or any other tool, and it opens the file.
 It also keeps SSH tunnels open, shares the phones on your desk with adb on the server, brings files
 back from the server, and takes shares from an Android phone.
 
-<p align="center"><img src="docs/images/demo.svg" width="760" alt="Take a screenshot, click tether's tray icon, then press Ctrl+V in the SSH window: the image's path on the server pastes, and Claude Code attaches it."></p>
+<p align="center"><img src="docs/images/demo.svg" width="760" alt="Take a screenshot; tether sends it and its tray icon turns green; press Ctrl+V in the SSH window and the image's path on the server pastes."></p>
 
 ## Install
 
@@ -86,11 +86,13 @@ for you.
 1. Right-click the tray icon, open **Send to server** and pick your server. The list is the `Host`
    names in your `~/.ssh/config`. Each time tether starts, it checks the connection and says in a
    balloon what to fix if it fails.
-2. Take a screenshot with `Win+Shift+S`. The first time, tether asks whether to send every screenshot
-   automatically or wait for a click.
-3. If it waits, the icon's disc turns into a grey ring: click the icon, or press `Ctrl+Alt+V` in any
-   app. When the disc turns green, the path is on the clipboard.
-4. Press `Ctrl+V` in the SSH window: Windows Terminal, VS Code, Cursor or any other.
+2. Take a screenshot with `Win+Shift+S`. The first time, tether asks how to send them: choose
+   **Send automatically**. From then on each screenshot is sent as you take it, and the icon's disc turns
+   green when the path is on the clipboard.
+3. Press `Ctrl+V` in the SSH window: Windows Terminal, VS Code, Cursor or any other.
+
+Prefer to choose each one? Set **Sending** to **Ask first**: the disc turns into a grey ring, and a
+click on the icon, or `Ctrl+Alt+V` in any app, sends it.
 
 Apps that take images, such as Paint or a chat, still paste the screenshot itself.
 
