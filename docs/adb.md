@@ -1,101 +1,95 @@
-# ADB device sharing
+[tether](../README.md) · [Tunnels](tunnels.md) · Phones over adb · [Android](android.md)
 
-Turn on *Tunnels → Share ADB devices* in the tray and every Android device your
-Windows machine can see — USB or wireless — becomes visible to `adb` on
-the server. Useful when Claude Code runs remotely but the phone is on
-your desk.
+# Phones over adb
+
+When Claude Code runs on a server and the phone is on your desk, tether lets `adb` on the server use
+the phone: `adb devices`, `adb install`, `adb shell` and logcat all work as if it were plugged in there.
+
+## Turn it on
+
+1. Connect the phone to the PC by USB, or with `adb connect` over Wi-Fi. `adb` must be on the PATH on
+   Windows.
+2. Right-click the tray icon and choose **Tunnels → Share phones (adb)**. The menu shows how many phones
+   the server can see.
+3. On the server, `adb devices` lists the phone.
+
+**Settings → Phones (adb)** has the same switch, the **Server** to share with, and the **adb port on
+the server** (5037 unless you change it).
+
+While sharing is on, any program or user on the server can use the shared phones with adb: the adb port
+opens on the server's `127.0.0.1`, with no login.
+
+## Open a server port from the phone
+
+To open a dev site on the server (say port 3000) in the phone's browser, put `3000` in **Phone ports**
+on the Phones (adb) page. Several ports are fine: `3000, 6111`. While sharing is on, each phone's
+`localhost:3000` reaches port 3000 on the server. The tray shows it under **Share phones (adb)** as
+"Phone's localhost:3000 → server", with the reason under it when it is down.
+
+## Set up the server
+
+If the server runs its own adb, port 5037 is already in use there and sharing cannot start. Either:
+
+- set **adb port on the server** to `5038`, and on the server
+  `export ANDROID_ADB_SERVER_PORT=5038` before running `adb`; or
+- stop the server's own adb with `adb kill-server`, before you turn sharing on.
+
+> [!WARNING]
+> Never run `adb kill-server` on the server while sharing is on. The server's `adb` is then talking to
+> the adb on your PC, and that is the one it would stop.
+
+> [!IMPORTANT]
+> The server's `adb` and the PC's must be the same version (`adb --version` on both). On a mismatch, the
+> server's `adb` restarts the adb it talks to, which is the one on your PC, and phones disappear from
+> both. Install the same platform-tools version on both machines.
+
+## Keep wireless debugging connected
+
+tether reconnects a phone that drops off Wi-Fi, at the address it last had. Android 11's
+**Wireless debugging** picks a new port each time it is turned on, so after a drop that address may be
+gone. A fixed port avoids it. With the phone connected once (by USB or Wi-Fi):
+
+```
+adb tcpip 5555
+adb connect <phone-ip>:5555
+```
+
+Port 5555 stays until the phone restarts. Most other drops come from one of these, on the phone or the
+router:
+
+- battery optimisation for wireless debugging: turn it off, or keep the screen on
+- the phone's IP address changing: give it a fixed one (a DHCP reservation)
+- AP or client isolation on the router: turn it off
+- the phone and the PC on different bands or networks
+
+## If `adb devices` on the server shows nothing, or hangs
+
+tether fixes this by itself within a few seconds: it finds what holds port 5037 on the server and
+clears it. To do it by hand, run `ss -tlnpe | grep 5037` on the server:
+
+- **`sshd`**, from a session that is not your current one: it is an old connection's leftover. End it
+  with `loginctl kill-session <N>`, or `kill` its process.
+- **`adb`**: the server's own adb started while sharing was down. Stop it with
+  `timeout 5 adb kill-server`.
+
+Leftover connections become rare once the server's sshd notices dead clients: set
+`ClientAliveInterval 15` and `ClientAliveCountMax 3` in its `sshd_config`
+([Tunnels](tunnels.md#when-a-tunnel-wont-stay-up)).
 
 ## How it works
 
-There is no per-device forwarding. The tray opens one reverse tunnel
-that exposes your **local adb server socket** on the server:
+There is no forwarding per phone. tether opens one tunnel that makes the adb on your PC answer on the
+server's port 5037:
 
 ```
 ssh -R 5037:127.0.0.1:5037 myserver
 ```
 
-`adb` on the server then talks to your local adb server, so `adb devices`,
-`adb shell`, `adb install`, logcat — everything — works against your
-local phones. The tunnel is supervised exactly like the port-forwarding
-tunnels (keep-alive, backoff restart, resume kick — see
-[tunnels.md](tunnels.md)).
+The server's `adb` connects to it as if it were a local adb. tether restarts this tunnel the same way as
+any other ([Tunnels](tunnels.md#how-it-works)). While sharing is on, tether also runs `adb devices` every
+5 seconds and reconnects any phone on Wi-Fi that dropped.
 
-While sharing is on, the tray also polls `adb devices` every 5 seconds
-and auto-retries `adb connect ip:port` for any wireless device that
-drops — phones lose wireless debugging constantly (sleep, Wi-Fi switch,
-battery saver). The ADB menu shows the live device count and how many
-are reconnecting.
-
-## Server-side setup
-
-If the server runs its **own** adb daemon, port 5037 is taken and the
-tunnel cannot bind. Two options:
-
-- stop it: `adb kill-server` on the server, or
-- set *Remote port* to e.g. `5038` in Settings and tell the server's adb
-  client to use it: `export ANDROID_ADB_SERVER_PORT=5038`
-
-**Version mismatch is the sharp edge.** The adb client checks the server
-version and, on mismatch, kills the server and starts its own — through
-the tunnel that kills *your local* adb server and the remote one takes
-over port 5037 locally-on-the-server instead. Symptom: devices vanish on
-both ends. Fix: install the same platform-tools version on both machines
-(`adb --version` must match).
-
-## Making wireless debugging survivable
-
-Android 11+ "Wireless debugging" picks a new random port every time it
-toggles, and pairing info does not include the connect port — so after a
-drop the old `ip:port` may be gone for good. The reliable path is legacy
-TCP mode on a fixed port:
-
-```
-adb tcpip 5555        # once, with the phone on USB (or already connected)
-adb connect <phone-ip>:5555
-```
-
-`5555` stays until the phone reboots, and the tray's reconnect loop can
-always win the device back at the same address. Also worth doing on the
-phone/router, since most "random" drops are one of these:
-
-- disable battery optimization for wireless debugging / keep screen on
-- give the phone a DHCP reservation so its IP never changes
-- turn off AP/client isolation on the router
-- keep phone and PC on the same band/subnet
-
-## If `adb devices` on the server suddenly shows nothing, or hangs
-
-Two things can own the remote port after a drop, and tether tells them
-apart before touching anything (v3.0.4):
-
-1. **sshd itself, holding the previous tunnel's forward.** A server
-   without `ClientAliveInterval` never notices that the old client is
-   gone and keeps the port bound for hours. Every `adb` command on the
-   server then *hangs* — it dials a forward that leads nowhere — and so
-   did tether's own recovery up to v3.0.3 (`adb kill-server` on the host
-   went down the same dead forward and left a zombie per retry). Now the
-   bind-failure fix reads the listener's session scope (`ss -e`), kills
-   that stale sshd session of yours (its `cgroup.procs` is readable
-   without root; `/proc/<pid>/fd` of a privsep child is not), and rebinds
-   on the next retry — a few seconds, not hours.
-2. **A server-local adb daemon**, spawned by the first remote `adb`
-   command during the gap. Evicted with `timeout 5 adb kill-server`,
-   bounded so it can never hang the loop again.
-
-To force it by hand: `ss -tlnpe | grep 5037` on the server — `sshd` with
-a `session-N.scope` that is not your live one is the stale forward
-(`kill` its user-side pid, or `loginctl kill-session N`); `adb` is the
-daemon (`adb kill-server`). Never run `adb kill-server` *on the server*
-while the tunnel is healthy: the adb client is talking to your Windows
-adb server through it, and it is that one you would kill.
-
-Make the stale case rare by letting sshd reap dead clients (see
-[tunnels.md](tunnels.md)): `ClientAliveInterval 15`,
-`ClientAliveCountMax 3` in `sshd_config`.
-
-## Limitations
-
-- Reconnect retries the last known `ip:port` only. If the port
-  randomized (Android 11+ wireless debugging after a toggle), reconnect
-  from the phone once — or use `adb tcpip 5555` and never think about it.
-- `adb` must be on PATH on the Windows side.
+Phone ports take two hops: `adb reverse` on each phone (the phone's port to the PC's), and one more
+tunnel from the PC to the server. tether runs `adb reverse` again when a phone appears, after the ports
+change, and once a minute, because adb forgets it each time a phone reconnects. If a tunnel you already
+have opens the same port to the same server, tether leaves the port to it.
