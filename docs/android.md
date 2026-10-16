@@ -111,11 +111,25 @@ arrives in the PC's **Recent** menu instead of on the clipboard.
 
 ## Updates
 
-tether looks for a new release when it starts (a share, or opening it), at most once every 20 hours. A
-new one posts one notification, "tether 3.2.0 is ready", and puts an **Update** card on tether's
-screen. Tapping either downloads `tether.apk`, checks it against the release's signed list of
-checksums, and hands it to Android, whose install dialog is the one confirmation. The first time, Android
-asks you to allow tether to install apps; the update carries on when you come back. The pairing stays.
+tether looks for a new release when it starts (a share, or opening it), at most once every 20 hours,
+and about once a day in the background on Wi-Fi. It downloads `tether.apk` and checks it against the
+release's signed list of checksums before anything is installed.
+
+On Android 12 and later, once tether may install apps, it installs the update by itself on Wi-Fi with
+the battery not low, while nothing is being shared and tether's screen is closed. A quiet
+notification then says "Updated to tether 3.2.2"; tap it for the release notes. The pairing stays. If a
+background update fails three times in a row, one notification says why; tap it to try again.
+
+Android asks instead:
+
+- The first time: one notification, "tether 3.2.2 is ready", and an **Update** card on tether's
+  screen. Tapping either downloads the update; Android asks you to allow tether to install apps (the
+  update carries on when you come back), then shows its install dialog.
+- On Android 10 and 11, every time, the same way.
+- From 3.2.0 to 3.2.1: 3.2.0 always asks, so that update shows Android's install dialog.
+
+**Update** on tether's screen always shows Android's dialog, so you see the install happen and can
+open tether again afterwards.
 
 ## Unpair and replace
 

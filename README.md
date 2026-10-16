@@ -126,10 +126,9 @@ The tray icon is tether's mark, and its disc shows how things stand, by shape as
 | <img src="docs/images/state-ok.png" width="24" height="24" alt="Green disc with a tick"> | Sent: the path is on the clipboard | Paste |
 | <img src="docs/images/state-warn.png" width="24" height="24" alt="Amber triangle"> | A tunnel, adb or receiving is reconnecting | Usually nothing; the menu says why |
 | <img src="docs/images/state-fail.png" width="24" height="24" alt="Red square"> | The last upload failed | Click the icon to retry |
-| <img src="docs/images/state-update.png" width="24" height="24" alt="Blue ring round a dot"> | A new version is ready | Update from the menu |
 
 Hover over the icon for the same in words, such as "sent 12 s ago → myserver". Balloons appear only for
-the connection check, failures, received files and updates.
+the connection check, failures, received files and after an update.
 
 ### Tunnels
 
@@ -180,10 +179,21 @@ to use SSH only. Setup: [Android](docs/android.md).
 
 ### Updates
 
-tether looks for a new release on GitHub about once a day. When there is one, it says so once and adds
-**Update to tether** with the new version's number to the tray menu. One click downloads it, checks it and restarts tether;
-tunnels and adb sharing reconnect by themselves, and the previous version stays beside it as
-`tether.exe.old`. The Android app looks when it starts, and Android asks you to confirm the install.
+tether looks for a new release on GitHub about once a day and installs it by itself. On Windows it
+downloads and checks the new version in the background, then restarts the next time nothing is being
+sent or received, no tether window or menu is open and no screenshot is waiting. Tunnels and adb sharing
+reconnect by themselves, and the previous version stays beside it as `tether.exe.old`. A balloon then
+says "Updated to tether 3.2.2" (with the new number); select it for the release notes. To update
+without waiting, choose **Update to tether 3.2.2 now** in the tray menu. If an update fails three times
+in a row, a balloon says why; tether keeps the version you have and tries again each hour.
+
+On Android 12 and later, the app installs updates by itself on Wi-Fi, while nothing is being shared and
+its screen is closed, then shows "Updated to tether 3.2.2". The first update asks: Android asks you to
+allow tether to install apps, then to confirm the install. Android 10 and 11 ask each time.
+
+**From 3.2.0:** 3.2.0 asks before it updates, so the update to 3.2.1 goes through its **Update and
+restart** dialog on Windows and Android's install dialog on the phone. Updates after that install by
+themselves.
 
 Each release carries the SHA-256 sum of each file, signed with the release key. The apps check that
 signature against the public key built into them, then each download's sum. A file that fails either
@@ -194,7 +204,8 @@ check is never installed.
 - It reads the clipboard when a screenshot or file is copied, and `~/.ssh/config` for server names.
 - It sends only to your servers, through your own `ssh`. Screenshots and files need nothing installed
   on the server.
-- It asks GitHub about new releases once a day. There are no accounts and no analytics.
+- It asks GitHub about new releases once a day and downloads them from there. There are no accounts
+  and no analytics.
 - Its settings are in `%APPDATA%\tether\config.ini`.
 
 ## Limits
