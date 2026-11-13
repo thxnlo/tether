@@ -57,34 +57,36 @@ tether logs in with your own SSH key and `~/.ssh/config`, the same ones the `ssh
 upload must log in without a prompt. If `ssh myserver true` already returns without asking for anything,
 skip to [First run](#first-run).
 
-1. Make a key in PowerShell on Windows, and accept the defaults:
-   ```powershell
-   ssh-keygen -t ed25519
-   ```
-2. Add the key to the server. For user `alice` on `example.test`:
-   ```powershell
-   type $env:USERPROFILE\.ssh\id_ed25519.pub |
-     ssh alice@example.test "mkdir -p ~/.ssh && cat >> ~/.ssh/authorized_keys"
-   ```
-3. Give the server a short name in `%USERPROFILE%\.ssh\config`:
-   ```
-   Host myserver
-       HostName example.test
-       User alice
-   ```
-4. Check it. This must print nothing and ask for nothing:
-   ```powershell
-   ssh myserver true
-   ```
+Right-click the tray icon, open **Send to server** and choose **Add a server…**. (On a first run with no
+server, the window opens by itself.)
 
-If step 4 still asks for a password, the key did not reach `~/.ssh/authorized_keys` on the server:
-repeat step 2. If it asks about the server's fingerprint, answer `yes` once; tether cannot answer it
-for you.
+1. Type the **Address**, like `devbox.example.com`, and the **User** you sign in as. `alice@devbox:2222`
+   fills the User and Port for you.
+2. Under **Key**, choose **Make a new key**, **Use a key file** or **Paste a key**. A new key asks for your
+   password once, in a window that opens, to put the key on the server. A key you already have must have
+   no passphrase.
+3. Select **Add server**. The first time, tether shows the server's fingerprint. Compare it with the one on
+   the server (`ssh-keygen -lf /etc/ssh/ssh_host_ed25519_key.pub`), then select **Trust and add**.
+
+tether saves the key in `~/.ssh`, adds a `Host` block to `~/.ssh/config` (marked `# added by tether`),
+checks that the login works, and starts sending to that server. It never edits a `Host` you already have.
+If the check fails, the window says why and leaves your files as they were.
+
+Prefer the command line? Make a key with `ssh-keygen -t ed25519`, add it to the server's
+`~/.ssh/authorized_keys`, and give the server a `Host` name in `%USERPROFILE%\.ssh\config`:
+
+```
+Host myserver
+    HostName example.test
+    User alice
+```
+
+Check it with `ssh myserver true`: it must print nothing and ask for nothing.
 
 ## First run
 
-1. Right-click the tray icon, open **Send to server** and pick your server. The list is the `Host`
-   names in your `~/.ssh/config`. Each time tether starts, it checks the connection and says in a
+1. Right-click the tray icon, open **Send to server** and pick your server (**Add a server…** adds one). The
+   list is the `Host` names in your `~/.ssh/config`. Each time tether starts, it checks the connection and says in a
    balloon what to fix if it fails.
 2. Take a screenshot with `Win+Shift+S`. The first time, tether asks how to send them: choose
    **Send automatically**. From then on each screenshot is sent as you take it, and the icon's disc turns
